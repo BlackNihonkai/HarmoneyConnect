@@ -1,0 +1,14 @@
+.user-container{
+    width: 80%;
+    border-radius: 30px;
+    margin-top: 20px;
+    padding: 25px;
+}
+.btn{
+    white-space: nowrap;
+    border-radius: 10px;
+    align-items: center;
+}
+.username-tag{
+    font-size: 18px;
+}

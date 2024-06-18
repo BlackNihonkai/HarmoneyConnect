@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block head %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+{% endblock head %}
+{% block title %}
+ユーザーページ
+{% endblock title %}
+
+
+
+{% block content %}
+<div id="user_profile" class="container mt-5">
+  <!-- ユーザープロフィール -->
+  <div class="font-bold profile-container d-flex align-items-center">
+      <img src="{{ selected_user.ProfileImage.url }}" class="user-icon me-3">
+      <div class="me-5">{{selected_user.username}}</div>
+      <div class="w-100"></div>
+      {% if user == selected_user %}
+      <a href="{% url 'profile_edit' user.id %}" class="btn btn-success logout-button ms-auto" role="button" aria-pressed="true">プロフィールを変更</a>
+      {% else %}
+      <div class="ms-auto d-flex">
+        <a href="{% url 'room' selected_user.id %}" class="me-3 btn btn-warning" role="button" aria-pressed="true">
+          チャットする
+        </a>
+      <div>
+        {% if followed %}
+            <button id="follow_{{selected_user.id}}" v-on:click="follow_post" name="{{selected_user.id}}" class="follow btn btn-light clear-decoration">フォロー解除</button>
+        {% else %}
+            <button id="follow_{{selected_user.id}}" v-on:click="follow_post" name="{{selected_user.id}}" class="follow btn btn-warning clear-decoration">フォロー</button>      
+        {% endif %}
+      </div>
+      </div>
+      {% endif %}
+  </div>
+  <!--------------------->
+</div>
+
+
+{% endblock content %}
+
+{% block footer %}
+
+<script type="text/javascript">
+
+const UserProfileApp=Vue.createApp({
+    data:()=>({
+        follow_url:"{% url 'follow' %}",
+    }),
+    methods:{
+        follow_post:function(event){
+          const headers={
+              'X-Requested-With': 'XMLHttpRequest',
+              'Content-Type':'application / json',
+              'X-CSRFToken':'{{ csrf_token }}'
+          }
+          let follow_data={
+            "follow_id":event.currentTarget.name,
+            "from_user_page": true,
+          }
+          follow_data=JSON.stringify(follow_data)
+          axios.post(this.follow_url,follow_data,{headers:headers})
+          .then(function(res){
+            const target_button=document.getElementById('follow_'+res.data.follow_id);
+            if(res.data.followed){
+              target_button.classList.remove("btn-warning")
+              target_button.classList.add("btn-light")
+              target_button.innerText="フォロー解除"
+            }else{
+              target_button.classList.remove("btn-light")
+              target_button.classList.add("btn-warning")
+              target_button.innerText="フォロー"
+            }
+            target_button.blur()
+            follower_count_ele=document.getElementById('follower_count')
+            follower_count_ele.innerText=res.data.follower_count+' フォロワー'
+          })
+          .catch(function(error){
+            console.log(error)
+          })
+        }
+    }
+})
+UserProfileApp.config.compilerOptions.delimiters = ['[[', ']]']
+UserProfileApp.mount('#user_profile')
+</script>
+{% endblock footer%}

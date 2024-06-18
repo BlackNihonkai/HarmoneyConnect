@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block head %}
+
+{% endblock head %}
+{% block title %}
+投稿内容検索
+{% endblock title %}
+
+
+{% block content %}
+<br>
+<div class="d-flex justify-content-center">
+    <form method="get" action="{% url 'search_posts_result' %}">
+        <div class="d-flex">
+            <input type="text" name="q" placeholder="投稿内容検索" class="form-control">
+            <button type="submit" class="btn btn-warning">検索</button>
+        </div>
+    </form>
+    <br>
+    <div>
+        <a href="{% url 'search_hashtags_result' %}" class="ms-3 align-self-center" role="button">ハッシュタグ検索はこちら</a>
+    </div>
+    <br>
+    <!-- 内容検索結果 -->
+
+</div>
+
+<div class="mt-5">
+    {% if posts %}
+        {% for post in posts %}
+        <table border="1" align="center" bordercolor="#ffcc33" align="text-center" cellpadding="5" width="50%">
+            <tr><td>
+                <p><img src="{{ post.user.ProfileImage.url }}" width="50"> {{ post.user.username }}</p>
+                <p>{{ post.content | linebreaksbr }}</p>
+                {% if post.image %}
+                    <div align="center"><img src="{{ post.image.url }}" width="50%"></div>
+                {% endif %}
+                <br>
+                <p><font color="#aaaaaa">Created at: {{ post.created_at }}</font></p>
+            </td></tr>
+        </table>
+        {% endfor %}
+        {% else %}
+        
+    {% endif %}
+</div>    
+<!---->
+
+<!-- タグ検索結果 -->
+<!--
+{% if posts %}
+<h2>Search Results</h2>
+{% for post in posts %}
+<table border="2" align="center" bordercolor="#ffcc33" align="text-center" cellpadding="5" width="50%">
+    <tr>
+        <td>
+            <p>{{ post.content }}</p>
+            {% if post.image %}
+            <div align="center"><img src="{{ post.image.url }}" alt="Post Image" width="50%"></div>
+            {% endif %}
+            <p>
+                <font color="#aaaaaa">Created at: {{ post.created_at }}</font>
+            </p>
+        </td>
+    </tr>
+</table>
+{% endfor %}
+{% else %}
+<p>No results found.</p>
+{% endif %}
+<!---->
+{% endblock content %}

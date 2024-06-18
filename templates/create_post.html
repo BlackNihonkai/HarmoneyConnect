@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block head %}
+
+{% endblock head %}
+{% block title %}
+新規投稿
+{% endblock title %}
+
+
+{% block content %}
+<br>
+
+{% if toxic %}
+<h1 class="text-danger d-flex justify-content-center mb-4">{{ toxic }}</h1>
+{% endif %}
+
+<div class="d-flex justify-content-center">
+    <form method="POST" action="{% url 'create_post' %}" novalidate enctype="multipart/form-data">
+        {% csrf_token %}
+        <!--<input type="text" name="title" placeholder="Title"><br>-->
+        <!--<textarea name="content" placeholder="Content"></textarea><br>-->
+        <div class="d-flex ms-auto mb-3 align-items-center">
+            <img src="{{ user.ProfileImage.url }}" width="50px" height="50px" style="border-radius: 100%;">
+            <div class="ms-2">{{ user.username }}</div>
+        </div>
+        
+        <div class="mb-3">{{ form.content }}</div>
+        <div class="mb-3"><span>画像を選択：</span>{{ form.image }}</div>
+        <button type="submit" class="btn btn-warning ">投稿する</button>
+    </form>
+</div>
+{% endblock content %}

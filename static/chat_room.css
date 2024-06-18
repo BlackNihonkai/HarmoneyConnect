@@ -1,0 +1,114 @@
+html{
+    height: 100%;
+}
+body{
+    height: 100%;
+}
+
+.chat-box{
+    margin-top: 1.5rem;
+}
+.chat-box-right{
+    margin-bottom: 3px;
+    display: flex;
+}
+.chat-box-left{
+    margin-bottom: 3px;
+    display: flex;
+}
+.chat-txt{
+    background-color: #FFCC33;
+    color: white;
+    border-radius: 15px;
+    border: 2px solid #eee;
+    padding: 1.1rem;
+    white-space: pre-wrap;
+    word-break: break-all;
+    max-width: 50%;
+}
+.chat-txt-right{
+    margin-left:auto ;
+    border-bottom-right-radius: 0;
+}
+.chat-txt-left{
+    margin-right:auto ;
+    border-bottom-left-radius: 0;
+}
+.icon-img-left{
+    margin-right: 7px;
+    margin-top: auto;
+}
+footer{
+    background-color: 	#000033;
+    border-top: 1px white solid;
+    height: 5%;
+}
+textarea{
+    resize: vertical;
+    max-height: 500px;
+    border: none !important;
+}
+.form-control{
+    background-color: white;
+    color: black;
+    border-color: gray;
+}
+.form-control:focus{
+    box-shadow: none !important;
+    outline: none;
+    background-color: #EEEEEE;
+}
+.btn{
+    white-space: nowrap;
+    color: white;
+}
+.btn:hover{
+    color: white;
+}
+.btn:active{
+    color: white;
+}
+#send_message{
+    max-height: 38px;
+    margin-top: auto;
+}
+.chat-time-right{
+    vertical-align:text-top;
+    text-align: right;
+    float: right;
+}
+.chat-time-left{
+    vertical-align:text-top;
+    margin-left: 55px;
+}
+
+#particles-js{ 
+	position:fixed;/*描画固定*/
+	z-index:-1;/*描画を一番下に*/
+	width: 100%;
+	height: 100%;
+	background-color:#020E34;/*背景色*/
+}
+
+#chat_room_container{
+	position: relative;/*描画を#particles-jsよりも上にするためposition:relative;を指定*/
+	z-index: 1;/*z-indexの数字を大きくすることで描画を#particles-jsよりも上に*/
+	width:100%;
+	height: 100%;
+    display: flex;
+    flex-direction: column;
+    height: 95%;
+    overflow-y: auto;
+}
+
+#chat_room_body{
+    padding: 10px;
+    flex: 1;
+    margin-bottom: 5.0rem;
+}
+
+@media(max-width:575px){
+    .chat-time-left{
+        margin-left: 42px;
+    }
+}

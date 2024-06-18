@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block head %}
+<link href="{% static 'search_user.css' %}" rel="stylesheet"> 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+{% endblock head %}
+
+{% block title %}
+ユーザー検索ページ
+{% endblock title %}
+btn-outline-warning
+{% block content %}
+  
+<main class="form-search-user mt-5">
+  <!-- 検索フォーム -->
+  <div class="container">
+    <form method="GET" class="d-flex">
+          <input type="text" class="form-control Search-form" placeholder="ユーザーを検索" name="keyword_user">
+          <button class="btn btn-outline-warning" type="submit"><i class="fas fa-search"></i><span>検索</span></button>
+    </form>
+  </div>
+  <!------------->
+
+<!-- ユーザー一覧 -->
+<div id="user_list">
+{% for searched_user in user_list%}
+  <div class="user-container container border border-secondary">
+    <div class="font-bold d-flex flex-wrap">
+      {% if searched_user == user %}
+      <a href="{% url 'user_mypage' %}" class="me-3" role="button" aria-pressed="true">
+        <img src="{{ searched_user.ProfileImage.url }}" class="user-icon">
+      </a>
+      {% else %}
+      <a href="{% url 'UserPage' searched_user.id %}" class="me-3" role="button" aria-pressed="true">
+        <img src="{{ searched_user.ProfileImage.url }}" class="user-icon">
+      </a>
+      {% endif %}
+      {{ searched_user.username }} 
+      {% if searched_user != user %}
+      <div class="ms-auto">
+          {% if searched_user.id in following_list %}
+              <button id="follow_{{searched_user.id}}" v-on:click="follow_post" name="{{searched_user.id}}" class="follow btn btn-light clear-decoration">フォロー解除</button>
+          {% else %}
+              <button id="follow_{{searched_user.id}}" v-on:click="follow_post" name="{{searched_user.id}}" class="follow btn btn-warning clear-decoration">フォロー</button>      
+          {% endif %}
+      </div>
+      {% endif %}
+    </div>
+  </div>
+{% endfor %}
+</div>
+<!---------------->
+
+</main>
+{% endblock content %}
+
+{% block footer %}
+
+<!-- フォロー機能のajax処理 -->
+<script type="text/javascript">
+const UserListApp=Vue.createApp({
+    data:()=>({
+        follow_url:"{% url 'follow' %}"
+    }),
+    methods:{
+        follow_post:function(event){
+          const headers={
+              'X-Requested-With': 'XMLHttpRequest',
+              'Content-Type':'application / json',
+              'X-CSRFToken':'{{ csrf_token }}'
+          }
+          let follow_data={
+            "follow_id":event.currentTarget.name,
+          }
+          follow_data=JSON.stringify(follow_data)
+          axios.post(this.follow_url,follow_data,{headers:headers})
+          .then(function(res){
+            const target_button=document.getElementById('follow_'+res.data.follow_id);
+            if(res.data.followed){
+              target_button.classList.remove("btn-warning")
+              target_button.classList.add("btn-light")
+              target_button.innerText="フォロー解除"
+            }else{
+              target_button.classList.remove("btn-light")
+              target_button.classList.add("btn-warning")
+              target_button.innerText="フォロー"
+            }
+            target_button.blur()
+          })
+          .catch(function(error){
+            console.log(error)
+          })
+        }
+    }
+})
+UserListApp.config.compilerOptions.delimiters = ['[[', ']]']
+UserListApp.mount('#user_list')
+</script>
+{% endblock footer%}

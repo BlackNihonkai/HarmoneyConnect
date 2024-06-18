@@ -1,0 +1,28 @@
+databases:
+  - name: harmoneyconnect_db
+    region: singapore
+    plan: free
+    databaseName: harmoneyconnect_db
+    user: harmoneyconnect_user
+
+services:
+  - type: web
+    name: harmoneyconnect
+    env: python
+    region: singapore
+    buildCommand: './build.sh'
+    startCommand: 'daphne -b 0.0.0.0 -p 8001 HarmoneyConnect.asgi:application'
+    plan: free
+    branch: master
+    healthCheckPath: /
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: harmoneyconnect_db
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true
+      - key: WEB_CONCURRENCY
+        value: 4
+    autoDeploy: false
+    

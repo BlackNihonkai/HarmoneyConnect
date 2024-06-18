@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block head %}
+<link href="{% static 'chat.css' %}" rel="stylesheet"> 
+{% endblock head %}
+{% block content %}
+<!-- room_list -->
+
+{% if partner_dict %}
+{% for partner,message in partner_dict.items %}
+  <div class="user-container container border border-secondary">
+    <div class="font-bold d-flex flex-wrap">
+      <a href="{% url 'user_mypage'%}" class="me-3" role="button" aria-pressed="true">
+        <img src="{{ partner.ProfileImage.url }}" class="user-icon">
+      </a>
+
+      <div>
+       <div class="username-tag">{{ partner.username }}</div>
+       <div class="text-secondary">{{message.content|truncatechars:50}}</div>
+      </div>
+        <div class="ms-auto d-flex flex-column">
+          <div class="text-secondary">{{message.created_at|date:"Y-m-d"}}</div>
+          <a href="{% url 'room' partner.id %}" class="btn btn-warning role="button" aria-pressed="true">チャットルーム</a>
+        </div>
+    </div>
+  </div>
+{% endfor %}
+
+{% else %}
+<h1 class="mt-5 ms-3">メッセージボックスへようこそ</h1>
+<div class="mt-4 ms-4">
+  <p>まだメッセージがありません</p>
+  <p>メッセージを送りたいユーザーのプロフィール画面から、メッセージを送ってみましょう</p>
+</div>
+{% endif %}
+<!---------------->
+{% endblock content %}

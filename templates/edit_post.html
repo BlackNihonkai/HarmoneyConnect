@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block head %}
+<link href="{% static 'home.css' %}" rel="stylesheet">
+{% endblock head %}
+{% block title %}
+投稿編集
+{% endblock title %}
+
+
+{% block content %}
+<br>
+<form method="POST" action="{% url 'create_post' %}" novalidate enctype="multipart/form-data">
+    {% csrf_token %}
+    <!--<input type="text" name="title" placeholder="Title"><br>-->
+    <!--<textarea name="content" placeholder="Content"></textarea><br>-->
+    {{ form.as_p }}
+    <button type="submit">Save Changes</button>
+</form>
+{% endblock content %}

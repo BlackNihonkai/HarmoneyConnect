@@ -1,0 +1,60 @@
+@media(max-width: 1000px){
+    html{
+        font-size: 12px !important;
+    }
+  }
+@media(max-width: 575px){
+  html{
+      font-size: 10px !important;
+  }
+}
+nav{
+    width: 100%;
+}
+.navbarTextColor{
+    color: #fff;
+}
+
+.navbarTextColor:hover{
+    color: #FF9933;
+}
+.nav-pills{
+    border-left:1px solid #fff;
+    border-right:1px solid #fff;
+}
+.nav-link{
+    color: white;
+}
+.nav-pills .nav-link:hover{
+    color: #FF9933;
+}
+.nav-item{
+    border-left:1px solid #fff;
+    border-right:1px solid #fff;
+}
+.btn{
+    white-space: nowrap;
+}
+body{
+    background-color: #fff;
+    color: black;
+    margin-bottom: 20px;
+}
+footer{
+    width: 100%;
+}
+
+@media(max-width:575px){
+    .user-icon{
+        width: 35px !important;
+        height: 35px !important;
+    }
+}
+img{
+    background-color: white;
+}
+.user-icon{
+    width: 50px;
+    height: 50px;
+    border-radius: 100%;
+}

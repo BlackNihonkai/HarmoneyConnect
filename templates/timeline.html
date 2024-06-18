@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block head %}
+<link href="{% static 'home.css' %}" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="{% static 'heart_timeline.css' %}">
+{% endblock head %}
+
+
+{% block title %}
+タイムライン
+{% endblock title %}
+
+{% block content %}
+<br>
+{% for post in posts %}
+<table border="1" align="center" bordercolor="#ffcc33" align="text-center" cellpadding="5" width="50%">
+<tr><td>
+    <p><img src="{{ post.user.ProfileImage.url }}" width="50" class="user-icon"> {{ post.user.username }}</p>
+    <p>{{ post.content | linebreaksbr }}</p>
+    {% if post.image %}
+        <div align="center"><img src="{{ post.image.url }}" width="50%"></div>
+    {% endif %}
+    <br>
+    <p><font color="#aaaaaa">Created at: {{ post.created_at }}</font></p>
+</td></tr>
+</table>
+<table border="1" align="center" bordercolor="#ffcc33" align="text-center" cellpadding="5" width="50%">
+<tr><td>
+    <!--
+        <a href="{% url 'add_comment' post_id=post.id %}" target="_blank">[test]コメント</a>
+    -->
+    <form method="get" action="{% url 'post_detail' post_id=post.id %}" target="_blank">
+        <button type="submit" class="btn btn-warning">詳細</button>
+    </form>
+</td>
+<td>
+        <form method="post" action="{% url 'like_timeline' post_id=post.id %}">
+            {% csrf_token %}
+            <!--<button type="submit" class="heart">-->
+            {% if request.user in post.likes.all %}
+            <button type="submit" class="heart1"></button>
+            <!--Unlike-->
+            {% else %}
+            <button type="submit" class="heart"></button>
+            <!--Like-->
+            {% endif %}
+            <!--</button>-->
+            <span>{{ post.likes.count }} Likes</span>
+        </form>
+    </td>
+</tr>
+</table>
+{% endfor %}
+{% endblock content %}

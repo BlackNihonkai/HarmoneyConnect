@@ -1,0 +1,64 @@
+@media(max-width: 575px){
+    html{
+        font-size: 10px;
+    }
+    .line-break{
+      display: inline-block;
+    }
+    #preview{
+      width: 100px;
+      height: 100px;
+    }
+  }
+  @media(min-width: 765px) and (max-width:1000px){
+    .line-break{
+      display: inline-block;
+    }
+  }
+  
+  html,
+  body {
+    height: 100%;
+  }
+  
+  
+  .form-edit {
+    width: 100%;
+    max-width: 800px;
+    padding: 15px;
+    margin: auto;
+    border-radius: 30px;
+    box-sizing: border-box;
+  }
+  
+  .form-edit .form-control {
+    position: relative;
+    box-sizing: border-box;
+    height: auto;
+    padding: 10px;
+    font-size: 16px;
+  }
+  
+  
+  .edit-title{
+      color: #FF9933;
+      margin-bottom: 50px;
+      font-size:3em;
+  }
+  .form-floating>label{
+      color: black;
+  }
+  .profile_image{
+      width: 200px;
+      height: 200px;
+      border-radius: 100%;
+  }
+  #id_ProfileImage{
+      display: none;
+  }
+  .image-field-label{
+    background-color: #ffc107;
+    cursor: pointer;
+    padding: 10px 40px;
+    border-radius: 20px;
+  }

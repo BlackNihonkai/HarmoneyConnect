@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block head %}
+<link href="{% static 'youtube.css' %}" rel="stylesheet">
+{% endblock head %}
+
+{% block title %}
+猫動画
+{% endblock title %}
+
+{% block content %}
+<h3 class="mb-5 text-danger">
+  {{ error_message }}
+</h3>
+  <div id="videos_container" class="container"> 
+    {% if videos %}
+      {% for video in videos %}
+        {% with youtube_url|add:'/watch?v='|add:video.video_id as video_url %}
+        <div class="video-container">
+            <a href="{{ video_url }}" class="thumbnail-box">
+                <img src="{{ video.thumbnali_url }}" class="thumbnail">
+                <span class="video-time">{{ video.video_time }}</span>
+            </a>
+            <div class="detail-box">
+                <a href="{{ video_url }}" class="video-url-box">
+                  <h3 class="text-dark">{{ video.title }}</h3>
+                  <p>
+                      <span class="text-secondary">{{ video.viewcount }} 回視聴 ・ {{ video.published_at }}</span>
+                  </p>
+                  {% with youtube_url|add:'/'|add:video.channel_handle_id as channel_url %}
+                  <p>
+                      <object><a href="{{ channel_url }}"><img src="{{ video.profile_image_url }}" class="user-icon"></a></object>
+                      <object><a href="{{ channel_url }}" class="channel-title">{{ video.channel_title }}</a></object>
+                  </p>
+                  <h5 class="text-secondary">{{ video.description | truncatechars:100 }}</h5>
+                  {% endwith %}
+                </a>
+            </div>
+        </div>
+        {% endwith %}
+      {% endfor %}
+    {% elif keyword and error_message is None %}
+      <h1>「{{ keyword }}」に一致する動画は見つかりませんでした。</h1>
+    {% endif %}
+  </div>
+{% endblock content %}

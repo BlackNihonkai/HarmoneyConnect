@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block head %}
+<link href="{% static 'home.css' %}" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="{% static 'heart_detail.css' %}">
+{% endblock head %}
+
+{% block title %}
+投稿内容
+{% endblock title %}
+
+
+{% block content %}
+<br>
+<table border="1" align="center" bordercolor="#ffcc33" align="text-center" cellpadding="5" width="50%">
+<tr><td>
+<!--
+<p>{{ post.content }}</p>
+<p>Created at: {{ post.created_at }}</p>
+-->
+    <div class="d-flex mb-3">
+        <div>
+            <img src="{{ post.user.ProfileImage.url }}" alt="Post Image" width="50"> {{ post.user.username }}
+        </div>
+        <form method="post" action="{% url 'delete_post' post.pk %}" class="ms-auto">{% csrf_token %}
+            <button class="btn btn-warning" type="submit" onclick='return confirm("本当に削除しますか?");'>削除</button>
+        </form>
+    </div>
+
+    <p>{{ post.content | linebreaksbr }}</p>
+    {% if post.image %}
+        <div align="center"><img src="{{ post.image.url }}" alt="Post Image" width="50%"></div>
+    {% endif %}
+    <br>
+    <p><font color="#aaaaaa">Created at: {{ post.created_at }}</font></p>
+</td></tr>
+</table>
+<table border="1" align="center" bordercolor="#ffcc33" align="text-center" cellpadding="5" width="50%">
+<tr>
+    <!-- 投稿に返信をする -->
+    <td>
+    <form method="get" action="{% url 'add_comment' post_id=post.id %}">
+        <button type="submit" class="btn btn-warning">投稿に返信</button>
+    </form>
+    </td>
+    <td>
+        <form method="post" action="{% url 'like_detail' post_id=post.id %}">
+            {% csrf_token %}
+            <!--<button type="submit" class="heart">-->
+                {% if request.user in post.likes.all %}
+                <button type="submit" class="heart1"></button>
+                <!--Unlike-->
+                {% else %}
+                <button type="submit" class="heart"></button>
+                <!--Like-->
+                {% endif %}
+            <!--</button>-->
+            <span>{{ post.likes.count }} Likes</span>
+        </form>
+    </td>
+    {% if request.user == post.user %}
+    <td>
+        <form method="get" action="{% url 'edit_post' post_id=post.id %}"><button type="submit" class="btn btn-warning">編集</button></form>
+    </td>
+    {% endif %}
+    <!--
+    {% if request.user == post.user %}
+    <td>
+        <from method="get" action="{% url 'delete_post' post_id=post.id %}"><button type="submit" class="btn btn-warning">Delete</button></from>
+    </td>
+    {% endif %}
+    <!---->
+</tr>
+</table>
+<!-- コメントの表示 -->
+{% for comment in post.comments.all %}
+<table border="1" align="center" bordercolor="#ffcc33" align="text-center" cellpadding="5" width="50%">
+    <tr>
+        <td>
+    <p><img src="{{ comment.user.ProfileImage.url }}" alt="Post Image" width="50"> {{ comment.user.username }}</p>
+    <p>{{ comment.content | linebreaksbr }}</p>
+    <p><font color="#aaaaaa">Created at: {{ comment.created_at }}</font></p>
+    </td>
+    </tr>
+    </table>
+{% empty %}
+{% endfor %}
+<br><br>
+{% endblock content %}
+
+<!--
+{% block extrajs %}
+<script type="text/javascript">
+    /* ポストに対するイイね */
+    document.getElementById('ajax-like-for-post').addEventListener('click', e => {
+        e.preventDefault();
+        const url = '{% url "bbs:like_for_post" %}';
+        fetch(url, {
+            method: 'POST',
+            body: `post_pk={{post.pk}}`,
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8',
+                'X-CSRFToken': '{{ csrf_token }}',
+            },
+        }).then(response => {
+            return response.json();
+        }).then(response => {
+            // 通信後の処理、とりあえずレスポンスを表示
+            console.log(response);
+        }).catch(error => {
+            console.log(error);
+        });
+    });
+</script>
+{% endblock %}
+-->

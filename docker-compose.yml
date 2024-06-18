@@ -1,0 +1,31 @@
+version: "3"
+services:
+ web:
+   container_name: "HC-container"
+   build: .
+   command: python manage.py runserver 0.0.0.0:8000
+   working_dir: /work
+   ports:
+     - 8000:8000
+   volumes:
+     - .:/work
+   depends_on:
+     - db
+ db:
+   container_name: "HC-DB-container"
+   image: mysql:5.7
+   environment:
+     MYSQL_DATABASE: "HC-DB"
+     MYSQL_USER: DB-developer
+     MYSQL_PASSWORD: DB-developer-pw
+     MYSQL_ROOT_PASSWORD: root
+     TZ: 'Asia/Tokyo'
+   command: mysqld --character-set-server=utf8 --collation-server=utf8_unicode_ci
+   volumes:
+     - ./mysql:/var/lib/mysql
+   ports:
+     - 3306:3306
+ redis:
+   image: "redis:alpine"
+   ports:
+    - 6379:6379

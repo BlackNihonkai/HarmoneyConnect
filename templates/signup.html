@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block head %}
+<link href="{% static 'signup.css' %}" rel="stylesheet"> 
+
+
+{% endblock head %}
+{% block title %}
+サインアップページ
+{% endblock title %}
+
+{% block header %}
+{% endblock header %}
+
+{% block content %}
+  
+<div class="container text-center">
+  <main class="form-signin">
+      <i class="far fa-smile-beam smileIcon mb-3">ようこそHarmoneyConnectへ！</i>
+      <form method="POST">{% csrf_token %}
+        {{ form.email.errors }}
+        <div class="mb-3">{{form.email}}</div>
+        <div class="mb-3">{{form.username}}</div>
+        <nobr>{{ form.password1.errors | linebreaksbr }}</nobr>
+        <div class="row g-2">
+          <div class="col-md">
+              {{form.password1}}
+          </div>
+          <div class="col-md">
+              {{ form.password2 }}
+          </div>
+        </div>
+        {{ form.password2.errors }}
+        <button class="w-100 btn btn-lg btn-warning" type="submit">Sign up</button>
+      </form>
+      <p class="mt-2">アカウントをお持ちの方はこちら→<a href="{% url 'login' %}">ログインページへ</a></p>
+  </main>
+</div>
+{% endblock content %}

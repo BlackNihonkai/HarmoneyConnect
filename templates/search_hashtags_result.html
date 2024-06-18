@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block head %}
+
+{% endblock head %}
+{% block title %}
+ハッシュタグ検索
+{% endblock title %}
+
+
+{% block content %}
+<br>
+<div class="d-flex justify-content-center">
+    <!-- 検索フォーム -->
+    <form method="post" action="{% url 'search_hashtags_result' %}">
+        {% csrf_token %}
+        <div class="d-flex">
+            {{ form.name }}
+            <button type="submit" class="btn btn-warning">検索</button>
+        </div>
+    </form>
+    <div>
+        <a href="{% url 'search' %}" class="ms-3 align-self-center" role="button">投稿内容の検索はこちら</a>
+    </div>
+</div>
+<br>
+
+<!-- 検索結果 -->
+{% if posts %}
+        {% for post in posts %}
+        <table border="1" align="center" bordercolor="#ffcc33" align="text-center" cellpadding="5" width="50%">
+            <tr><td>
+                <p><img src="{{ post.user.ProfileImage.url }}" width="50"> {{ post.user.username }}</p>
+                <p>{{ post.content | linebreaksbr }}</p>
+                {% if post.image %}
+                    <div align="center"><img src="{{ post.image.url }}" width="50%"></div>
+                {% endif %}
+                <br>
+                <p><font color="#aaaaaa">Created at: {{ post.created_at }}</font></p>
+            </td></tr>
+        </table>
+        {% endfor %}
+        {% else %}
+        
+    {% endif %}
+{% endblock content %}

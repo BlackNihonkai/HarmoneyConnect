@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block head %}
+<link href="{% static 'profile_edit.css' %}" rel="stylesheet"> 
+{% endblock head %}
+
+{% block title %}
+プロフィール変更ページ
+{% endblock title %}
+
+{% block content %}
+  
+<div class="container text-center mt-5">
+  <main class="form-edit">
+    <span class="line-break edit-title">プロフィールを変更しよう！</span>
+    <form method="POST" enctype="multipart/form-data">{% csrf_token %}
+      <div class="mb-3">
+        <img class="profile_image" src="{{user.ProfileImage.url}}" id="preview">
+      </div>
+      <div class="mb-3">
+        <label for="id_ProfileImage" class="image-field-label">
+            画像を選択{{form.ProfileImage}}
+        </label>
+      </div>
+
+      <div class="form-floating mb-3">
+        {{form.username}}
+        <label for="id_username">ユーザー名</label>
+      </div>
+      <div class="form-floating mb-3">
+        {{form.profile}}
+        <label for="id_profile">プロフィール</label>
+      </div>
+      <div class="d-flex">
+       <button class="ms-auto btn btn-warning" type="submit">変更</button>
+      </div>
+    </form>
+  </main>
+</div>
+{% endblock content %}
+
+{% block footer %}
+<script src="{% static 'profile_edit.js' %}"></script>
+{% endblock footer%}

@@ -1,0 +1,136 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block head %}
+<link href="{% static 'chat_room.css' %}" rel="stylesheet"> 
+
+{% endblock head %}
+
+{% block content %} 
+<div id="particles-js"></div>
+<div id="chat_room_container">
+    <div id="chat_room_body">
+        {% for message in messages %}
+        {% if message.user == user %}
+        <div class="chat-box">
+            <div class="chat-box-right">
+                <div class="chat-txt chat-txt-right">{{ message.content | linebreaksbr }}</div>
+            </div>
+            <span><sub class="chat-time-right">{{ message.created_at | date:"H:i" }}</sub></span>
+        </div>
+        {% else %}
+        <div class="chat-box">
+            <div class="chat-box-left">
+                <div class="icon-img-left">
+                    <img src="{{ Partner.ProfileImage.url }}" class="user-icon">
+                </div>
+                <div class="chat-txt chat-txt-left">{{ message.content | linebreaksbr }}</div>
+            </div>
+            <span><sub class="chat-time-left">{{ message.created_at | date:"H:i" }}</sub></span>
+        </div>
+        {% endif %}
+        {% endfor %}
+
+        <div v-for="message_obj in message_list" class="chat-box">
+            <div v-if="message_obj.chatbox_type == 'chat-box-right'" class="chat-box-right">
+                <div class="chat-txt chat-txt-right">[[ message_obj.message ]]</div>
+            </div>
+            <div v-else class="chat-box-left">
+                <div class="icon-img-left">
+                    <img src="{{ Partner.ProfileImage.url }}" class="user-icon">
+                </div>
+                <div class="chat-txt chat-txt-left">[[ message_obj.message ]]</div>
+            </div>
+            <span v-if="message_obj.chatbox_type == 'chat-box-right'"><sub class="chat-time-right">[[ message_obj.time ]]</sub></span>
+            <span v-else><sub class="chat-time-left">[[ message_obj.time ]]</sub></span>
+        </div>
+    </div>
+
+    <footer class="footer mt-auto py-3 fixed-bottom">
+        <div class="container d-flex pb-2">
+            <textarea id="message_form" v-on:input="resizeMessageForm" name="text" class="d-flex form-control" placeholder="メッセージを入力"></textarea>
+            <div class="d-flex">
+            <button id="send_message" v-on:click="sendMessage" class="btn btn-warning ms-auto">送信</button>
+            </div>
+        </div>
+    </footer>
+</div>
+{% endblock content %}
+
+{% block footer%}
+<script type="text/javascript">
+const ChatApp = Vue.createApp({ 
+    data:()=>({
+        websocket:'',
+        message_form:'',
+        clientHeight:'',
+        chatRoomBody:'',
+        chatBoxComponent:'',
+        message_list:[],
+    }),
+    methods:{
+        initWebsocket:function(){
+            const url = '{{ WS_URL }}' + '{{ room.id }}'
+            this.websocket = new WebSocket(url)
+	    this.websocket.addEventListener('error', function (event) {
+               console.log('WebSocket error: ', event);
+             });
+            this.websocket.onmessage=this.websocketOnMessage
+        },
+        initMessageForm:function(){
+            this.message_form=document.getElementById('message_form')
+            this.message_form.style.lineHeight="20px"
+            this.message_form.style.height="30px"
+            this.clientHeight=this.message_form.clientHeight
+        },
+        sendMessage:function(){
+            let sendData = {
+                message: this.message_form.value,
+                room_name:'{{ room.id }}',
+                user_id:'{{ user.id }}'
+            }
+            if (this.message_form.value){
+                this.websocket.send(JSON.stringify(sendData))
+                this.message_form.value=""
+                this.message_form.style.height="30px"
+            }
+        },
+        websocketOnMessage:function(event){
+            let receiveData=JSON.parse(event.data)
+            if (receiveData.toxic){
+                alert("人が不快になるような言葉はやめましょう")
+            }
+            else{
+                if(receiveData.user_id=='{{ user.id }}'){
+                    this.message_list.push({message:receiveData.message,time:receiveData.created_time,chatbox_type:'chat-box-right'})
+                }
+                else{
+                    this.message_list.push({message:receiveData.message,time:receiveData.created_time,chatbox_type:'chat-box-left'})
+                }
+                setTimeout(()=>{this.chatRoomBody.scrollIntoView(false)}, 50)
+            }
+            
+        },
+        resizeMessageForm:function(){
+            this.message_form.style.height = this.clientHeight + 'px'
+            let scrollHeight = this.message_form.scrollHeight
+            this.message_form.style.height = scrollHeight + 'px'
+        }
+    },
+    mounted:function(){
+        this.initWebsocket()
+        this.initMessageForm()
+        this.chatRoomBody=document.getElementById('chat_room_body')
+        this.chatRoomBody.scrollIntoView(false)
+    }
+})
+
+ChatApp.config.compilerOptions.delimiters = ['[[', ']]']
+ChatApp.mount('#chat_room_container')
+
+</script>
+
+<script src="//cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+<script src="{% static 'chat_room.js' %}"></script>
+
+{% endblock footer %}

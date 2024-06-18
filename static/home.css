@@ -1,0 +1,22 @@
+@import url('https://fonts.googleapis.com/css?family=Merienda');
+
+body {
+  font-family: 'Merienda', cursive;
+}
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/85188/beach-heart.JPG) center center;
+  background-size: cover;
+}
+.box {
+  background: rgba(255,255,255,.7);
+  border-radius: 5px;
+  padding: 20px;
+  text-align: center;
+}
+a {
+  color: #0bd;
+}

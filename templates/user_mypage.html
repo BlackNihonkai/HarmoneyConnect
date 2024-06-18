@@ -1,0 +1,133 @@
+{% extends 'base.html' %}
+{% block head %}
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width", initial-scale="1.0">
+<title>プロフィールページ</title>
+<meta name="description" content="プロフィールページ詳細を表示する"/>
+
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+.heading-lv1 {
+    margin: 16px 0 0;
+    font-size: 32px;
+    font-style: italic;
+}
+
+
+.heading-lv2 {
+    margin: 16px 0 0;
+    font-size: 24px;
+    font-style: italic;
+}
+
+
+.heading-lv3 {
+    margin: 16px 0 0;
+    font-size: 20px;
+    font-style: italic;
+}
+
+
+.text {
+    margin: 16px 0 0;
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+
+.text-center {
+    text-align: center;
+}
+
+
+.profile-image {
+    margin: 16px 0 0;
+    text-align: center;
+}
+.profile-image img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+}
+
+
+.heading-margin {
+    margin-top: 32px;
+}
+
+
+
+
+.content {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 16px;
+    background-color: #fff;
+}
+
+
+a {
+    color: #3F82A8;
+}
+
+
+a:hover {
+    text-decoration: none;
+}
+
+
+</style>
+
+
+{% endblock head %}
+{% block title %}
+ユーザー検索
+{% endblock title %}
+
+
+
+
+{% block content %}
+<body class="wrap">
+    <div class="content">
+        <figure class="profile-image">
+            <img src="{{user.ProfileImage.url }}" >
+        </figure>
+        <h2 class="heading-lv2 heading-margin text-center">{{ user.username }} ({{ user.email }})</h2>
+        
+        {% if user.profile %}
+        <h5 class="mt-3">{{ user.profile }}</h5>
+        {% endif %}
+        
+        <div class="d-flex">
+            <a href="{% url 'profile_edit' user.id %}" class="btn btn-warning ms-auto mt-3" role="button" aria-pressed="true">プロフィールを変更</a>
+        </div>
+    </div>
+    <div class="content">
+    {% for post in posts %}
+        <table border="1" align="center" bordercolor="#ffcc33" align="text-center" cellpadding="5" width="100%" >
+        <tr><td class="p-2">
+            <p><img src="{{ post.user.ProfileImage.url }}" width="50"> {{ post.user.username }}</p>
+            <p>{{ post.content | linebreaksbr }}</p>
+            {% if post.image %}
+                <div align="center"><img src="{{ post.image.url }}" width="50%"></div>
+            {% endif %}
+            <br>
+            <p><font color="#aaaaaa">Created at: {{ post.created_at }}</font></p>
+        </td></tr>
+        </table>
+        {% endfor %}
+    </div>
+</body>
+
+
+{% endblock content %}
+
